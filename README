@@ -2,3 +2,19 @@
 - Save for real the file
 - Retrive the file
 - Does it need to be persistent? (for text area)
+
+
+jade@0.19.0 ./node_modules/jade 
+├── mkdirp@0.2.1
+└── commander@0.2.1
+express@2.5.2 ./node_modules/express 
+├── mkdirp@0.0.7
+├── qs@0.4.0
+├── mime@1.2.4
+└── connect@1.8.2
+connect-form@0.2.1 ./node_modules/connect-form 
+└── formidable@1.0.8
+socket.io@0.8.7 ./node_modules/socket.io 
+├── policyfile@0.0.4
+├── redis@0.6.7
+└── socket.io-client@0.8.7
