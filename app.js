@@ -16,7 +16,6 @@ app.configure('production', function(){
   app.use(express.errorHandler()); 
 });
 
-
 app.get('/', function(req, res){
   res.render('index.jade', { title: 'SuperUploader' });
 });
