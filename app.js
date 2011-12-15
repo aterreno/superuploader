@@ -1,11 +1,25 @@
 var express = require('express')
   , form = require('connect-form')
   , app = express.createServer(form({ keepExtensions: true }))
-  , io = require('socket.io').listen(app);
+  , io = require('socket.io').listen(app)
+  , mongoose = require('mongoose')
+  , util = require('util');
 
+var Schema = mongoose.Schema
+  , ObjectId = Schema.ObjectId;
+
+var Upload = new Schema({
+    user        : ObjectId
+  , text        : String
+  , sessionID   : String
+  , filePath    : String  
+});
 
 app.configure(function(){
   app.use(express.static(__dirname + '/public'));
+  app.use(express.cookieParser());
+  app.use(express.session({ secret: "supersecret" }));
+  mongoose.connect('mongodb://localhost/superupload');
 });
 
 app.configure('development', function(){
@@ -17,7 +31,7 @@ app.configure('production', function(){
 });
 
 app.get('/', function(req, res){
-  res.render('index.jade', { title: 'SuperUploader' });
+  res.render('index.jade', { title: 'SuperUploader', sessionID: req.sessionID });
 });
 
 app.post('/upload', function(req, res, next){
@@ -42,5 +56,14 @@ app.post('/upload', function(req, res, next){
   });
 });
 
+io.sockets.on('connection', function (socket) {  
+  socket.on('save', function (data) {
+    var UploadModel = mongoose.model('Upload',Upload);
+    var upload = new UploadModel({text: data.val, sessionID: data.sessionID});    
+    UploadModel.update({sessionID: data.sessionID}, {$set: { text: data.val }}, {upsert: true}, function(err) {
+      //
+    });    
+  });
+});
 app.listen(80);
-console.log('Express app started on port 3000');
+console.log('Express app started on port 80');

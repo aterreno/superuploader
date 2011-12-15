@@ -1,9 +1,11 @@
 !!!
 html
   head
+    script
+      var sessionID = '#{sessionID}';
     script(src='/socket.io/socket.io.js')
-    script(src='/javascripts/application.js')
     script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js')
+    script(src='/javascripts/application.js')    
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
   body!= body

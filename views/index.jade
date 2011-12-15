@@ -5,6 +5,9 @@ form(action='/upload', enctype='multipart/form-data', method='post')
   input(type='text', name='title')
   input(type='file', name='upload')
   br
+  textarea(rows='3', id='textarea')
+  input(type='submit', value='Save', id='saveText', onClick='return false')
+  br
   input(type='submit', value='Upload')
 div#progress
   Progress: 0%
