@@ -45,6 +45,11 @@ namespace :deploy do
     run "#{try_sudo :as => 'root'} mkdir -p #{deploy_to}"
     run "#{try_sudo :as => 'root'} chown #{admin_runner}:#{admin_runner} #{deploy_to}"
   end
+
+  desc "Check required packages and install if packages are not installed"
+  task :update_packages, roles => :app do
+    run "cd #{release_path} && npm -d install"
+  end
   
   task :write_upstart_script, :roles => :app do
     upstart_script = <<-UPSTART
@@ -70,4 +75,5 @@ end
 
 before 'deploy:setup', 'deploy:create_deploy_to_with_sudo'
 after 'deploy:setup', 'deploy:write_upstart_script'
+before 'deploy:update', 'deploy:update_packages'
 after "deploy:update", "deploy:cleanup" 
