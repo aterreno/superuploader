@@ -7,6 +7,7 @@ set :repository, "git@github.com:aterreno/superuploader.git"
 set :user, "ubuntu"
 set :admin_runner, 'ubuntu'
 set :application_binary, '/usr/local/bin/node'
+set :deploy_to, "/var/www/#{application}"
 
 set :scm, :git
 set :deploy_via, :remote_cache
