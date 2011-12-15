@@ -1,19 +1,21 @@
-var express = require('express')
-  , form = require('connect-form')
-  , app = express.createServer(form({ keepExtensions: true }))
-  , io = require('socket.io').listen(app)
-  , mongoose = require('mongoose')
-  , util = require('util');
+var express = require('express'), 
+    form = require('connect-form'), 
+    app = express.createServer(form({ keepExtensions: true })),
+    io = require('socket.io').listen(app), 
+    mongoose = require('mongoose'), 
+    util = require('util'), 
+    progressEvent = new require('./progressEvent').ProgressEvent();
 
-var Schema = mongoose.Schema
-  , ObjectId = Schema.ObjectId;
+var Schema = mongoose.Schema;
 
-var Upload = new Schema({
-    user        : ObjectId
-  , text        : String
+var Upload = new Schema({    
+    text        : String
   , sessionID   : String
-  , filePath    : String  
+  , filePath    : String
+  , filename    : String  
 });
+
+var UploadModel = mongoose.model('Upload',Upload);
 
 app.configure(function(){
   app.use(express.static(__dirname + '/public'));
@@ -41,26 +43,25 @@ app.post('/upload', function(req, res, next){
       console.log(err);
       next(err);
     } else {
-      console.log('\nuploaded %s to %s'
-        ,  files.upload.filename
-        , files.upload.path);
+      UploadModel.update({sessionID: req.sessionID}, {$set: { filePath: files.upload.path, filename: files.upload.filename  }}, {upsert: true}, function(err) {
+        console.log(err);
+      });    
       res.redirect('back');
     }
   });
 
   req.form.on('progress', function(bytesReceived, bytesExpected){
     var percent = (bytesReceived / bytesExpected * 100) | 0;
-    
-    io.sockets.on('connection', function (socket) {  
-       socket.emit('progress', { percent: percent});
-    });    
+    progressEvent.download(percent);
   });
 });
 
-io.sockets.on('connection', function (socket) {  
+io.sockets.on('connection', function (socket) {
+  progressEvent.on('progress', function(percentage) {    
+    socket.emit('progress', { percent: percentage}); 
+  });
+
   socket.on('save', function (data) {
-    var UploadModel = mongoose.model('Upload',Upload);
-    var upload = new UploadModel({text: data.val, sessionID: data.sessionID});    
     UploadModel.update({sessionID: data.sessionID}, {$set: { text: data.val }}, {upsert: true}, function(err) {
       console.log(err);
     });    
