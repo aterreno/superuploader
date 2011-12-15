@@ -57,15 +57,17 @@ app.post('/upload', function(req, res, next){
 });
 
 io.sockets.on('connection', function (socket) {
-  progressEvent.on('progress', function(percentage) {    
-    socket.emit('progress', { percent: percentage}); 
+  progressEvent.on('progress', function(percentage) {
+    console.log(percentage);
+    socket.emit('progress', { percent: percentage});
   });
 
   socket.on('save', function (data) {
+    console.log("onSave");
     UploadModel.update({sessionID: data.sessionID}, {$set: { text: data.val }}, {upsert: true}, function(err) {
       console.log(err);
     });    
   });
 });
 app.listen(80);
-console.log('Express app started on port 80');
+console.log('Superupload application up and running');
