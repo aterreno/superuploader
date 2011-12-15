@@ -75,5 +75,5 @@ end
 
 before 'deploy:setup', 'deploy:create_deploy_to_with_sudo'
 after 'deploy:setup', 'deploy:write_upstart_script'
-before 'deploy:update', 'deploy:update_packages'
+after 'deploy:update', 'deploy:update_packages'
 after "deploy:update", "deploy:cleanup" 
