@@ -2,7 +2,7 @@ require "bundler/capistrano"
 
 set :application, "superupload"
 set :node_file, "app.js"                  
-set :host, "localhost"                    
+set :host, "ec2-107-20-118-43.compute-1.amazonaws.com"                    
 set :repository, "git@github.com:aterreno/superuploader.git"
 set :user, "ubuntu"
 set :admin_runner, 'ubuntu'
