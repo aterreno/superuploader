@@ -1,9 +1,9 @@
 Bluepill.application("superupload") do |app|
   app.process("node") do |process|
-    process.working_dir = "/var/www/node/current"
+    process.working_dir = "/var/www/superupload/current"
     process.start_command = "/usr/bin/env NODE_ENV=production app_port=80 node app.js"
-    process.pid_file = "/var/www/node/shared/pids/node.pid"
-    process.stdout = process.stderr = "/var/www/node/shared/logs/node.log"
+    process.pid_file = "/var/www/superupload/shared/pids/node.pid"
+    process.stdout = process.stderr = "/var/www/superupload/shared/logs/node.log"
     process.daemonize = true
 
     process.start_grace_time = 10.seconds
