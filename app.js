@@ -42,5 +42,5 @@ app.post('/upload', function(req, res, next){
   });
 });
 
-app.listen(3000);
+app.listen(80);
 console.log('Express app started on port 3000');
