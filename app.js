@@ -38,6 +38,7 @@ app.post('/upload', function(req, res, next){
 
   req.form.complete(function(err, fields, files){
     if (err) {
+      console.log(err);
       next(err);
     } else {
       console.log('\nuploaded %s to %s'
@@ -61,7 +62,7 @@ io.sockets.on('connection', function (socket) {
     var UploadModel = mongoose.model('Upload',Upload);
     var upload = new UploadModel({text: data.val, sessionID: data.sessionID});    
     UploadModel.update({sessionID: data.sessionID}, {$set: { text: data.val }}, {upsert: true}, function(err) {
-      //
+      console.log(err);
     });    
   });
 });
