@@ -52,15 +52,20 @@ app.post('/upload', function(req, res, next){
 
   req.form.on('progress', function(bytesReceived, bytesExpected){
     var percent = (bytesReceived / bytesExpected * 100) | 0;
-    progressEvent.download(percent);
+    // progressEvent.download(percent);
+
+    io.sockets.on('connection', function (socket) {        
+      socket.emit('progress', { percent: percent});
+      client = socket;
+      });        
   });
 });
 
 io.sockets.on('connection', function (socket) {
-  progressEvent.on('progress', function(percentage) {
-    console.log(percentage);
-    socket.emit('progress', { percent: percentage});
-  });
+  // progressEvent.on('progress', function(percentage) {
+  //   console.log(percentage);
+  //   socket.emit('progress', { percent: percentage});
+  // });
 
   socket.on('save', function (data) {
     console.log("onSave");
